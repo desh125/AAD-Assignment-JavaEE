@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemDTO {
-    private String code;
-    private String name;
-    private int qtyOnHand;
-    private double price;
+public class CartDTO {
+    private ItemDTO item;
+    private int qty;
 }

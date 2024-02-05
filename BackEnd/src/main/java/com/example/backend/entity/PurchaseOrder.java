@@ -1,4 +1,4 @@
-package com.example.backend.dto;
+package com.example.backend.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,10 +9,10 @@ import java.util.ArrayList;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PurchaseOrderDTO {
+public class PurchaseOrder {
     private String orderID;
     private String date;
-    private ArrayList<CartDTO> cartArray;
+    private ArrayList<Cart> cartArray;
     private double total;
     private int discount;
     private String cusTomerId;
