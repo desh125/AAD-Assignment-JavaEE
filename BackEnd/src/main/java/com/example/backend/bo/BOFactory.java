@@ -1,5 +1,10 @@
 package com.example.backend.bo;
 
+import com.example.backend.bo.custom.impl.CustomerBoImpl;
+import com.example.backend.bo.custom.impl.ItemBoImpl;
+import com.example.backend.bo.custom.impl.OrdersBoImpl;
+import com.example.backend.bo.custom.impl.PurchaseOrderBoImpl;
+
 public class BOFactory {
     private static BOFactory boFactory;
 
@@ -16,13 +21,13 @@ public class BOFactory {
     public SuperBO getBO(BOTypes types) {
         switch (types) {
             case CUSTOMER:
-                return new CustomerBOImpl(); // SuperBO bo =new CustomerBOImpl();
+                return new CustomerBoImpl(); // SuperBO bo =new CustomerBOImpl();
             case ITEM:
-                return new ItemBOImpl(); // SuperBO bo = new ItemBOImpl();
+                return new ItemBoImpl(); // SuperBO bo = new ItemBOImpl();
             case ORDERS:
-                return new OrdersBOImpl(); // SuperBO bo = new OrdersBOImpl();
+              //  return new OrdersBoImpl(); // SuperBO bo = new OrdersBOImpl();
             case PURCHASE_ORDER:
-                return new PurchaseOrderBOImpl(); //SuperBO bo = new PurchaseOrderBOImpl();
+                return new PurchaseOrderBoImpl(); //SuperBO bo = new PurchaseOrderBOImpl();
             default:
                 return null;
         }

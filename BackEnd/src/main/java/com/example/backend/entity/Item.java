@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class Item {
     private String code;
     private String name;
-    private int qtyOnHand;
     private double price;
+    private int qtyOnHand;
 }

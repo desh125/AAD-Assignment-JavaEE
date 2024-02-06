@@ -6,6 +6,9 @@ import com.example.backend.bo.SuperBO;
 import com.example.backend.dto.CustomerDTO;
 import com.example.backend.dto.ItemDTO;
 import com.example.backend.dto.PurchaseOrderDTO;
+import com.example.backend.entity.Customer;
+import com.example.backend.entity.Item;
+import com.example.backend.entity.PurchaseOrder;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -23,8 +26,15 @@ public interface PurchaseOrderBO extends SuperBO {
 
     String generateNewOrderID() throws SQLException, ClassNotFoundException;
 
-    ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException;
+    Item getItemById(String itemId) throws SQLException, ClassNotFoundException;
 
-    ArrayList<ItemDTO> getAllItems() throws SQLException, ClassNotFoundException;
+    ArrayList<String> getAllCustomers() throws SQLException, ClassNotFoundException;
 
+    PurchaseOrder getOrderById(String orderId) throws SQLException, ClassNotFoundException;
+
+    ArrayList<String> getAllOrderIds() throws SQLException, ClassNotFoundException;
+
+    ArrayList<String> getAllItems() throws SQLException, ClassNotFoundException;
+
+    Customer getCustomerById(String customerId) throws SQLException, ClassNotFoundException;
 }
