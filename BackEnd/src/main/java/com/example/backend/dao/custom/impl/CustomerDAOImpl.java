@@ -66,11 +66,11 @@ public class CustomerDAOImpl implements CustomerDAO {
         try (Connection connection = MyListener.pool.getConnection();) {
             PreparedStatement pstm = connection.prepareStatement("update customers set name=?,tp=?, age=?, salary=? where customerId=?");
 
-            pstm.setObject(5, dto.getId());
             pstm.setObject(1, dto.getName());
             pstm.setObject(2, dto.getTp());
             pstm.setObject(3, dto.getAge());
             pstm.setObject(4, dto.getSalary());
+            pstm.setObject(5, dto.getId()); // Corrected index
 
             if (pstm.executeUpdate() > 0) {
                 System.out.println("Updated");

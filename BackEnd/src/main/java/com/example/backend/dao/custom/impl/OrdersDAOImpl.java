@@ -40,12 +40,12 @@ public class OrdersDAOImpl implements OrdersDAO {
                 String total = rst.getString(6);
 
                 CustomEntity orderDetail = new CustomEntity();
-                orderDetail.setOrderID(orderID);
-                orderDetail.setDate(date);
+               // orderDetail.setOrderID(orderID);
+               // orderDetail.setDate(date);
                // orderDetail.setCusID(customerID);
                // orderDetail.setItemID(itemsIDs);
-                orderDetail.setDiscount(Integer.parseInt(discount));
-                orderDetail.setTotal(Double.parseDouble(total));
+                //orderDetail.setDiscount(Integer.parseInt(discount));
+               // orderDetail.setTotal(Double.parseDouble(total));
 
                 allOrders.add(orderDetail);
             }
