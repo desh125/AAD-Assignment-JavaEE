@@ -3,6 +3,7 @@ package com.example.backend.api;
 import com.example.backend.api.util.ResponseUtil;
 import com.example.backend.bo.BOFactory;
 import com.example.backend.bo.custom.PurchaseOrderBO;
+import com.example.backend.dto.CartDTO;
 import com.example.backend.dto.CustomerDTO;
 import com.example.backend.dto.ItemDTO;
 import com.example.backend.dto.PurchaseOrderDTO;
@@ -140,16 +141,35 @@ public class InvoiceServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        JsonReader reader = Json.createReader(req.getReader());
+        JsonObject jsonObject = reader.readObject();
         String orderId = req.getParameter("orderId");
         String date = req.getParameter("date");
         String customerId = req.getParameter("customerId");
-        double discount = Double.parseDouble(req.getParameter("discount"));
-        double total = Double.parseDouble(req.getParameter("total"));
+        JsonArray cart = jsonObject.getJsonArray("cart");
+        String discount = req.getParameter("discount");
+        String total = req.getParameter("total");
+        ArrayList<CartDTO> cartArray = new ArrayList<>();
+        for (JsonValue jsonValue : cart) {
+            JsonObject cartObject = (JsonObject) jsonValue;
 
-     //   PurchaseOrderDTO purchaseOrderDTO = new PurchaseOrderDTO(orderId, date, customerId, discount, total);
+            // Extract item and qty values from the JSON object
+            JsonObject itemObject = cartObject.getJsonObject("item");
+           // int qty = cartObject.getInt("qty");
+
+            ItemDTO itemDTO = new ItemDTO();
+            itemDTO.setCode(itemObject.getString("code"));
+     //       itemDTO.setQtyOnHand(itemObject.getInt("qty"));
+
+            CartDTO cartDTO = new CartDTO();
+            cartDTO.setItem(itemDTO);
+       //     cartDTO.setQty(qty);
+
+            cartArray.add(cartDTO);
+        }
 
         try {
-            boolean isSaved = purchaseOrderBO.purchaseOrder(new PurchaseOrderDTO());
+            boolean isSaved = purchaseOrderBO.purchaseOrder(new PurchaseOrderDTO(orderId, date, cartArray,Double.parseDouble(total),Integer.parseInt(discount),customerId));
             if (isSaved) {
                 resp.getWriter().print(ResponseUtil.genJson("Success", "Invoice saved successfully."));
                 resp.setStatus(HttpServletResponse.SC_OK);

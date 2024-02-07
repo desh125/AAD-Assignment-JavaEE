@@ -147,7 +147,53 @@ $('#selectCusID').change(function () {
 
     });
 
-    function calculateBalanceAndDiscount() {
+$('#purchaseButton').click(function () {
+    // Gather data from form fields
+    var orderId = $('#orderId').val();
+    var date = $('#date').val();
+    var customerId = $('#selectCusID').val();
+    var discount = $('#discount').val();
+    var total = $('#totalPrice').val();
+    var cart = [];
+
+    // Gather cart items from the table
+    $('#tb3 tr').each(function () {
+        var itemCode = $(this).find('td:eq(0)').text();
+       // var qty = $(this).find('td:eq(3)').text();
+        cart.push({ "item": { "code": itemCode } });
+    });
+
+
+    // Send data to server
+    $.ajax({
+        url: baseUrl+'invoice', // Update URL to match your servlet endpoint
+        method: 'POST',
+        data: {
+            orderId: orderId,
+            date: date,
+            customerId: customerId,
+            discount: discount,
+            total: total,
+            cart: cart
+        },
+        success: function (response) {
+            // Handle server response
+            if (response.status === 'Success') {
+                alert("Invoice saved successfully.");
+                // Optionally, clear form fields or perform other actions
+            } else {
+                alert("Failed to save invoice: " + response.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred while processing the request.");
+            console.error(xhr.responseText);
+        }
+    });
+});
+
+
+function calculateBalanceAndDiscount() {
         var updatedQty = parseInt($('#qty').val()) || 0;
         var updatedPrice = parseFloat($('#itemPrice2').val()) || 0;
         var updatedTotalPrice = updatedQty * updatedPrice;
