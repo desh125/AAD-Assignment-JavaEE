@@ -14,46 +14,35 @@ import java.util.ArrayList;
 public class OrdersDAOImpl implements OrdersDAO {
 
     @Override
-    public ArrayList<CustomEntity> getAll() {
+    public ArrayList<PurchaseOrder> getAlls() {
         try (Connection connection = MyListener.pool.getConnection();) {
-            PreparedStatement pstm = connection.prepareStatement("SELECT\n" +
-                    "    o.orderID,\n" +
-                    "    o.date,\n" +
-                    "    o.customerID,\n" +
-                    "    GROUP_CONCAT(oi.itemID ORDER BY oi.itemID) AS itemsIDs,\n" +
-                    "    o.discount,\n" +
-                    "    o.total\n" +
-                    "FROM orders o\n" +
-                    "         JOIN order_items oi ON o.orderID = oi.orderID\n" +
-                    "GROUP BY o.orderID;");
+            PreparedStatement pstm = connection.prepareStatement("select * from orders");
             ResultSet rst = pstm.executeQuery();
 
-            ArrayList<CustomEntity> allOrders = new ArrayList<>();
+            ArrayList<PurchaseOrder> itemArrayList = new ArrayList<>();
             while (rst.next()) {
-                String orderID = rst.getString(1);
+                String orderId = rst.getString(1);
                 String date = rst.getString(2);
-                String customerID = rst.getString(3);
-                String itemsIDs = rst.getString(4);
-                String discount = rst.getString(5);
-                String total = rst.getString(6);
-
-                CustomEntity orderDetail = new CustomEntity();
-               // orderDetail.setOrderID(orderID);
-               // orderDetail.setDate(date);
-               // orderDetail.setCusID(customerID);
-               // orderDetail.setItemID(itemsIDs);
-                //orderDetail.setDiscount(Integer.parseInt(discount));
-               // orderDetail.setTotal(Double.parseDouble(total));
-
-                allOrders.add(orderDetail);
+                String customerId = rst.getString(3);
+                int discount = rst.getInt(4);
+                double total = rst.getDouble(5);
+                System.out.println("this is OrderId"+rst.getString(1));
+                PurchaseOrder item = new PurchaseOrder(orderId,date,customerId,discount,total);
+                itemArrayList.add(item);
             }
+            System.out.println("this is dao"+itemArrayList);
 
-            return allOrders;
+            return itemArrayList;
 
         } catch (SQLException e) {
             System.out.println("Connection failed");
-            return null;
         }
+        return null;
+    }
+
+    @Override
+    public ArrayList<CustomEntity> getAll() throws SQLException, ClassNotFoundException {
+        return null;
     }
 
     @Override

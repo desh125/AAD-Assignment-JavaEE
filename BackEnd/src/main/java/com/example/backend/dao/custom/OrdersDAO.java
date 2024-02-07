@@ -18,4 +18,5 @@ public interface OrdersDAO extends CrudDAO<CustomEntity,String> {
     ArrayList<String> getAllCustomerIds();
 
     Customer getCustomerById(String customerId);
+    ArrayList<PurchaseOrder> getAlls();
 }

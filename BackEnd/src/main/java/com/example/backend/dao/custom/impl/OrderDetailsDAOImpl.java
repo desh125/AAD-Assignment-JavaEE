@@ -12,17 +12,17 @@ public class OrderDetailsDAOImpl implements OrderDetailsDAO {
     @Override
     public ArrayList<Orders> getAll() throws SQLException, ClassNotFoundException {
         try (Connection connection = MyListener.pool.getConnection();) {
-            PreparedStatement pstm = connection.prepareStatement("select * from orders");
+            PreparedStatement pstm = connection.prepareStatement("select * from order_details");
             ResultSet rst = pstm.executeQuery();
 
             ArrayList<Orders> itemArrayList = new ArrayList<>();
             while (rst.next()) {
                 String orderId = rst.getString(1);
-                String customerId = rst.getString(3);
-                String date = rst.getString(2);
+                String customerId = rst.getString(2);
+                String item_code = rst.getString(3);
                String address = "galle";
 
-                Orders item = new Orders(orderId, date, customerId,address);
+                Orders item = new Orders(orderId,customerId,item_code);
                 itemArrayList.add(item);
             }
 

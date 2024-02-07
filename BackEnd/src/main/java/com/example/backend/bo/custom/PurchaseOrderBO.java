@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public interface PurchaseOrderBO extends SuperBO {
+    ArrayList<PurchaseOrderDTO> getAllOrderS() throws SQLException, ClassNotFoundException, SQLException;
+
     boolean purchaseOrder(PurchaseOrderDTO dto) throws SQLException, ClassNotFoundException;
 
     CustomerDTO searchCustomer(String id) throws SQLException, ClassNotFoundException;
