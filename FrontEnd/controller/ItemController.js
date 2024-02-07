@@ -1,31 +1,25 @@
 
 $(document).ready(function () {
-    // Load all items when the page loads
     bindRowClickEvents()
     getAllItems();
-    // Click event for the Add button
     $("#addButtonItem").click(function () {
         saveItem();
     });
 
-    // Click event for the Get All button
     $("#btnGetAll").click(function () {
         getAllItems();
     });
 
-    // Click event for the Delete button
     $("#deleteButtonItem").click(function () {
         let code = $("#itemCode").val();
         deleteItem(code);
     });
 
-    // Click event for the Update button
     $("#updateButtonItem").click(function () {
         let code = $("#itemCode").val();
         updateItem(code);
     });
 
-    // Click event for the Clear button
     $("#clearButtonItem").click(function () {
         clearItemInputFields();
     });
@@ -77,11 +71,11 @@ function getAllItems() {
                 let row = `<tr><td>${code}</td><td>${name}</td><td>${qty}</td><td>${price}</td></tr>`;
                 $("#tb2").append(row);
             }
-            // setTextFields("", "", "", "", ""); // Assuming setTextFields takes 5 arguments
+            // setTextFields("", "", "", "", "");
         },
         error: function (error) {
             alert(error.responseJSON.message);
-            // setTextFields("", "", "", "", ""); // Assuming setTextFields takes 5 arguments
+            // setTextFields("", "", "", "", "");
         }
     });
 }

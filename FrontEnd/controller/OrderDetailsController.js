@@ -62,4 +62,27 @@ function getAllOrderDetails() {
     });
 }
 
+$(document).on('click', '.deleteOrder', function() {
+    let orderId = $(this).closest('tr').find('td:first').text();
+
+    $.ajax({
+        url: baseUrl + 'invoice?orderId=' + orderId,
+        method: 'DELETE',
+        success: function(response) {
+            // Remove the table row from the UI
+            $(this).closest('tr').remove();
+            alert("Order deleted successfully.");
+            getAllOrderDetails();
+        },
+        error: function(error) {
+            if (error.responseJSON && error.responseJSON.message) {
+                alert(error.responseJSON.message);
+            } else {
+                alert("An error occurred while deleting the order.");
+            }
+        }
+    });
+});
+
+
 

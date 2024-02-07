@@ -28,10 +28,8 @@ public class InvoiceServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            // Retrieve all purchase orders
             ArrayList<PurchaseOrderDTO> purchaseOrders = purchaseOrderBO.getAllOrderS();
 
-            // Build JSON array for all purchase orders
             JsonArrayBuilder allPurchaseOrders = Json.createArrayBuilder();
             for (PurchaseOrderDTO purchaseOrder : purchaseOrders) {
                 JsonObjectBuilder purchaseOrderObject = Json.createObjectBuilder();
@@ -43,11 +41,9 @@ public class InvoiceServlet extends HttpServlet {
                 allPurchaseOrders.add(purchaseOrderObject);
             }
 
-            // Set content type and status code
             resp.setContentType("application/json");
             resp.setStatus(HttpServletResponse.SC_OK);
 
-            // Write JSON data to response
             resp.getWriter().print(allPurchaseOrders.build().toString());
         } catch (Exception e) {
             // Handle any exceptions
@@ -106,8 +102,23 @@ public class InvoiceServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        // Implement code to handle PUT requests if needed
         resp.getWriter().print("PUT method not implemented for InvoiceServlet");
         resp.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+    }
+
+    @SneakyThrows
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String orderId = req.getParameter("orderId");
+
+        boolean isDeleted = purchaseOrderBO.deleteOrder(orderId);
+
+        if (isDeleted) {
+            resp.getWriter().print(ResponseUtil.genJson("Success", orderId + " Customer Deleted..!"));
+            resp.setStatus(200);
+        } else {
+            resp.getWriter().print(ResponseUtil.genJson("Failed", "Customer with ID " + orderId + " not found."));
+            resp.setStatus(400);
+        }
     }
 }

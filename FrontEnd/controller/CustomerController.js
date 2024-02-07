@@ -59,8 +59,8 @@ $(document).ready(function () {
         let id1 = $("#cId").val();
         let customerName = $("#cName").val();
         let customerTP = $("#cTP").val();
-        let customerAge = parseInt($("#cAge").val()); // Ensure age is parsed as integer
-        let customerSalary = parseFloat($("#cSalary").val()); // Ensure salary is parsed as float
+        let customerAge = parseInt($("#cAge").val());
+        let customerSalary = parseFloat($("#cSalary").val());
 
         let customer = {
             "cusId": id1,
@@ -95,12 +95,10 @@ $(document).ready(function () {
     });
 
 
-    // Clear button event
     $("#clearButtonCustomer").click(function () {
         clearCustomerInputFields();
     });
 
-    // CRUD operation functions
 
     function saveCustomer() {
         let customerID = $("#cId").val();
@@ -150,11 +148,11 @@ $(document).ready(function () {
                     let row = `<tr><td>${id}</td><td>${name}</td><td>${tp}</td><td>${age}</td><td>${salary}</td></tr>`;
                     $("#tb").append(row);
                 }
-               // setTextFields("", "", "", "", ""); // Assuming setTextFields takes 5 arguments
+               // setTextFields("", "", "", "", "");
             },
             error: function (error) {
                 alert(error.responseJSON.message);
-               // setTextFields("", "", "", "", ""); // Assuming setTextFields takes 5 arguments
+               // setTextFields("", "", "", "", "");
             }
         });
     }

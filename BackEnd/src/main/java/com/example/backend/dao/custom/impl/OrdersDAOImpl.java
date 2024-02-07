@@ -183,7 +183,21 @@ public class OrdersDAOImpl implements OrdersDAO {
 
     @Override
     public boolean delete(String s) throws SQLException, ClassNotFoundException {
-        return false;
+        try (Connection connection = MyListener.pool.getConnection();) {
+            PreparedStatement pstm = connection.prepareStatement("delete from orders where orderId=?");
+            pstm.setObject(1, s);
+
+            if (pstm.executeUpdate() > 0) {
+                System.out.println("Deleted");
+                return true;
+            } else {
+                System.out.println("failed");
+                return false;
+            }
+        } catch (SQLException e) {
+            System.out.println("Connection failed");
+            return false;
+        }
     }
 
     @Override

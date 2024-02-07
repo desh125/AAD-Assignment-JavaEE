@@ -5,13 +5,11 @@ import com.example.backend.dao.DAOFactory;
 import com.example.backend.dao.custom.OrderDetailsDAO;
 import com.example.backend.dao.custom.OrdersDAO;
 import com.example.backend.dto.*;
-import com.example.backend.entity.CustomEntity;
 import com.example.backend.entity.Customer;
 import com.example.backend.entity.Item;
 import com.example.backend.entity.PurchaseOrder;
 
 import java.sql.SQLException;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class PurchaseOrderBoImpl implements PurchaseOrderBO {
@@ -134,13 +132,13 @@ public class PurchaseOrderBoImpl implements PurchaseOrderBO {
         return ordersDAO.getCustomerById(customerId);
     }
 
-/*    @Override
+/*   @Override
     public boolean updateOrder(PurchaseOrderDTO PurchaseOrderDTO) throws SQLException, ClassNotFoundException {
         return false; // This method is not implemented yet
-    }
+    }*/
 
     @Override
     public boolean deleteOrder(String orderId) throws SQLException, ClassNotFoundException {
-        return false; // This method is not implemented yet
-    }*/
+        return ordersDAO.delete(orderId);
+    }
 }

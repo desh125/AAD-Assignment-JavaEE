@@ -6,18 +6,15 @@ var totalPrice=0;
 function populateCustomerDropdown() {
     var selectCusID = $('#selectCusID');
 
-    // Clear existing options
     selectCusID.empty();
 
-    // Add a default option
     selectCusID.append($('<option>', {
         value: '',
         text: 'Select Customer ID'
     }));
 
-    // Make AJAX request to fetch customer IDs
     $.ajax({
-        url: baseUrl+'customer', // Update URL to match servlet endpoint
+        url: baseUrl+'customer',
         dataType: "json",
         method: 'GET',
         success: function (response) {
@@ -50,7 +47,7 @@ function populateCustomerDropdown() {
         }));
 
         $.ajax({
-            url: baseUrl+'item', // Update URL to match servlet endpoint
+            url: baseUrl+'item',
             dataType: "json",
             method: 'GET',
             success: function (response) {
@@ -75,10 +72,8 @@ function populateCustomerDropdown() {
 $('#selectCusID').change(function () {
     var selectedCustomerId = $(this).val();
 
-    // Find the selected customer details in the dropdown options
     var selectedOption = $(this).find("option:selected");
 
-    // Get the text (customer ID) and data-id attribute (customer details) from the selected option
     var customerId = selectedOption.text();
     var customerDetails = selectedOption.data("id");
 
@@ -149,7 +144,6 @@ $('#selectCusID').change(function () {
 
 $('#purchaseButton').click(function () {
 
-    // Gather data from form fields
     var orderId = $('#orderId').val();
     var date = $('#orderDate').val();
     var customerId = $('#selectCusID').val();
@@ -157,13 +151,11 @@ $('#purchaseButton').click(function () {
     var total = $('#totalPrice').val();
     var cart = [];
 
-    // Gather cart items from the table
     $('#tb3 tr').each(function () {
         var itemCode = $(this).find('td:eq(0)').text();
         cart.push({ "item": { "code": itemCode } });
     });
 
-    // Prepare data to send to the server
     var requestData = {
         "orderId": orderId,
         "date": date,
@@ -173,23 +165,21 @@ $('#purchaseButton').click(function () {
         "cart": cart
     };
 
-    // Send data to server
     $.ajax({
         url: baseUrl + 'invoice',
         method: 'POST',
-        contentType: 'application/json', // Specify JSON content type
-        data: JSON.stringify(requestData), // Convert data to JSON string
+        contentType: 'application/json',
+        data: JSON.stringify(requestData),
         success: function (response) {
-            // Handle server response
-            if (response.state === 'Success') { // Check response state
+            if (response.state === 'Success') {
                 alert("Invoice saved successfully.");
-                // Optionally, clear form fields or perform other actions
+
             } else {
                 alert("Failed to save invoice: " + response.message);
             }
         },
         error: function (xhr, status, error) {
-            alert("An error occurred while processing the request.");
+            //alert("An error occurred while processing the request.");
             console.error(xhr.responseText);
         }
     });

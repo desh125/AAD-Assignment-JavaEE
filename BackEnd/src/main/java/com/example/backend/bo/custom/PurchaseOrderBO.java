@@ -39,4 +39,6 @@ public interface PurchaseOrderBO extends SuperBO {
     ArrayList<String> getAllItems() throws SQLException, ClassNotFoundException;
 
     Customer getCustomerById(String customerId) throws SQLException, ClassNotFoundException;
+
+    boolean deleteOrder(String orderId) throws SQLException, ClassNotFoundException;
 }
