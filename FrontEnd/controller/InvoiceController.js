@@ -1,23 +1,43 @@
 $('#orderId, #customerName, #customerTP, #customerSalary').prop('disabled', true);
 $('#itemName2, #itemPrice2, #qtyOnHand, #qtyAfter').prop('disabled', true);
+populateCustomerDropdown();
+populateItemCodeDropdown()
+var totalPrice=0;
+function populateCustomerDropdown() {
+    var selectCusID = $('#selectCusID');
 
-   function populateCustomerDropdown() {
-        var selectCusID = $('#selectCusID');
+    // Clear existing options
+    selectCusID.empty();
 
-        selectCusID.empty();
+    // Add a default option
+    selectCusID.append($('<option>', {
+        value: '',
+        text: 'Select Customer ID'
+    }));
 
-        selectCusID.append($('<option>', {
-            value: '',
-            text: 'Select Customer ID'
-        }));
+    // Make AJAX request to fetch customer IDs
+    $.ajax({
+        url: baseUrl+'customer', // Update URL to match servlet endpoint
+        dataType: "json",
+        method: 'GET',
+        success: function (response) {
+            let items = response.data;
 
-       for(let i = 0; i < customerDB.length; i++){
-            selectCusID.append($('<option>', {
-                value: customerDB[i].id,
-                text: customerDB[i].id
-            }));
+            for (let i = 0; i < items.length; i++) {
+                let cus = items[i];
+                selectCusID.append($('<option>', {
+                    value: cus.id,
+                    text: cus.id,
+                    "data-id": JSON.stringify(cus)
+                }));
+            }
+        },
+        error: function (error) {
+            console.error('Error fetching customer IDs:', error);
         }
-    }
+    });
+}
+
 
     function populateItemCodeDropdown() {
         var selectItemCode = $('#selectItemCode');
@@ -29,44 +49,56 @@ $('#itemName2, #itemPrice2, #qtyOnHand, #qtyAfter').prop('disabled', true);
             text: 'Select Item Code'
         }));
 
-        itemDB.forEach(function (item) {
-            selectItemCode.append($('<option>', {
-                value: item.code,
-                text: item.code
-            }));
+        $.ajax({
+            url: baseUrl+'item', // Update URL to match servlet endpoint
+            dataType: "json",
+            method: 'GET',
+            success: function (response) {
+                let items = response.data;
+
+                for (let i = 0; i < items.length; i++) {
+                    let cus = items[i];
+                    selectItemCode.append($('<option>', {
+                        value: cus.code,
+                        text: cus.code,
+                        "data-id": JSON.stringify(cus)
+                    }));
+                }
+            },
+            error: function (error) {
+                console.error('Error fetching customer IDs:', error);
+            }
         });
     }
 
 
-    $('#selectCusID').change(function () {
-        var selectedCustomerId = $(this).val();
-        var selectedCustomer = customerDB.find(function (customer) {
-            return customer.id == selectedCustomerId;
-            
-        });
+$('#selectCusID').change(function () {
+    var selectedCustomerId = $(this).val();
 
-  
-        $('#orderId').val(generateOrderId()); 
-        $('#customerName').val(selectedCustomer.name);
-        $('#customerTP').val(selectedCustomer.tp);
-        $('#customerSalary').val(selectedCustomer.salary);
-        $('#customerAddress').val('');
+    // Find the selected customer details in the dropdown options
+    var selectedOption = $(this).find("option:selected");
 
-      
+    // Get the text (customer ID) and data-id attribute (customer details) from the selected option
+    var customerId = selectedOption.text();
+    var customerDetails = selectedOption.data("id");
 
-    });
+    // Update the customer details in the form fields
+    $('#orderId').val(generateOrderId());
+    $('#customerName').val(customerDetails.name);
+    $('#customerTP').val(customerDetails.tp);
+    $('#customerSalary').val(customerDetails.salary);
+   // $('#customerAddress').val(customerDetails.address);
+});
 
     $('#selectItemCode').change(function () {
-        var selectedItemCode = $(this).val();
-        var selectedItem = itemDB.find(function (item) {
-            return item.code == selectedItemCode;
-        });
+        var selectedOption = $(this).find("option:selected");
+        var itemDetails = selectedOption.data("id");
 
-        $('#itemName2').val(selectedItem.name);
-        $('#itemPrice2').val(selectedItem.price);
-        $('#qtyOnHand').val(selectedItem.quantity);
+        $('#itemName2').val(itemDetails.itemName);
+        $('#itemPrice2').val(itemDetails.price);
+        $('#qtyOnHand').val(itemDetails.qty);
         let qtyAfter = $('#qty').val();
-        $('#qtyAfter').val(selectedItem.quantity-qtyAfter);
+        $('#qtyAfter').val(itemDetails.qty-qtyAfter);
 
         
     });
@@ -74,8 +106,8 @@ $('#itemName2, #itemPrice2, #qtyOnHand, #qtyAfter').prop('disabled', true);
     $('#qty, #itemPrice2').on('input', function () {
         var qty = parseFloat($('#qty').val()) || 0;
         var price = parseFloat($('#itemPrice2').val()) || 0;
-        var totalPrice = qty * price;
-        $('#totalPrice').val(totalPrice);
+        // totalPrice = qty * price;
+       // $('#totalPrice').val(totalPrice);
     });
 
     function generateOrderId() {
@@ -93,15 +125,15 @@ $('#itemName2, #itemPrice2, #qtyOnHand, #qtyAfter').prop('disabled', true);
         var itemPrice = parseFloat($('#itemPrice2').val()) || 0;
         var qty = parseInt($('#qty').val()) || 0;
         var qtyAfter = parseInt($('#qtyAfter').val()) || 0;
-
-        var totalPrice = itemPrice * qty;
-
+        totalPrice +=  itemPrice * qty;
+        $('#totalPrice').val(totalPrice);
+        var totalPrice1 = itemPrice * qty;
         var newRow = $('<tr>');
         newRow.append($('<td>').text(itemCode));
         newRow.append($('<td>').text(itemName));
         newRow.append($('<td>').text(itemPrice));
         newRow.append($('<td>').text(qty));
-        newRow.append($('<td>').text(totalPrice));
+        newRow.append($('<td>').text(totalPrice1));
 
         $('#tb3').append(newRow);
 
@@ -112,12 +144,7 @@ $('#itemName2, #itemPrice2, #qtyOnHand, #qtyAfter').prop('disabled', true);
         $('#itemPrice2').val('');
         $('#qty').val('');
 
-        $('#qty, #itemPrice2').on('input', function () {
-            var updatedQty = parseInt($('#qty').val()) || 0;
-            var updatedPrice = parseFloat($('#itemPrice2').val()) || 0;
-            var updatedTotalPrice = updatedQty * updatedPrice;
-            $('#totalPrice').val(updatedTotalPrice);
-        });
+
     });
 
     function calculateBalanceAndDiscount() {
@@ -126,9 +153,9 @@ $('#itemName2, #itemPrice2, #qtyOnHand, #qtyAfter').prop('disabled', true);
         var updatedTotalPrice = updatedQty * updatedPrice;
         var cash = parseFloat($('#cash').val()) || 0;
         var discountPercentage = parseFloat($('#discount').val()) || 0;
-        var discountAmount = (updatedTotalPrice * discountPercentage) / 100;
+        var discountAmount = (totalPrice * discountPercentage) / 100;
     
-        var discountedTotal = updatedTotalPrice - discountAmount; 
+        var discountedTotal = totalPrice - discountAmount;
         $('#totalPrice').val(discountedTotal);
     
         var balance = cash - discountedTotal; 

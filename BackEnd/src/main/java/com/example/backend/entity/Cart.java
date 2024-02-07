@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Cart {
-    private Item item;
-    private int qty;
+    private String code;
+    private String name;
+    private double price;
+    private int qtyOnHand;
 }

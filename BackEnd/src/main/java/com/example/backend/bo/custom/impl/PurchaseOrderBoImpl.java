@@ -2,10 +2,9 @@ package com.example.backend.bo.custom.impl;
 
 import com.example.backend.bo.custom.PurchaseOrderBO;
 import com.example.backend.dao.DAOFactory;
+import com.example.backend.dao.custom.OrderDetailsDAO;
 import com.example.backend.dao.custom.OrdersDAO;
-import com.example.backend.dto.CustomerDTO;
-import com.example.backend.dto.ItemDTO;
-import com.example.backend.dto.PurchaseOrderDTO;
+import com.example.backend.dto.*;
 import com.example.backend.entity.Customer;
 import com.example.backend.entity.Item;
 import com.example.backend.entity.PurchaseOrder;
@@ -15,9 +14,11 @@ import java.util.ArrayList;
 
 public class PurchaseOrderBoImpl implements PurchaseOrderBO {
     private final OrdersDAO ordersDAO;
+    private final OrderDetailsDAO orderDetailsDAO;
 
     public PurchaseOrderBoImpl() {
         this.ordersDAO = (OrdersDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ORDER);
+        this.orderDetailsDAO = (OrderDetailsDAO) DAOFactory.getDaoFactory().getDAO(DAOFactory.DAOTypes.ORDERDETAILS);
     }
 
 /*    @Override
@@ -38,15 +39,37 @@ public class PurchaseOrderBoImpl implements PurchaseOrderBO {
     }*/
 
     @Override
-    public boolean purchaseOrder(PurchaseOrderDTO PurchaseOrderDTO) throws SQLException, ClassNotFoundException {
+    public boolean purchaseOrder(PurchaseOrderDTO purchaseOrderDTO) throws SQLException, ClassNotFoundException {
+        // Insert into orders table
         PurchaseOrder order = new PurchaseOrder();
-        order.setOrderID(PurchaseOrderDTO.getOrderID());
-        order.setDate(PurchaseOrderDTO.getDate());
-        order.setCusTomerId(PurchaseOrderDTO.getCusTomerId());
-        order.setDiscount(PurchaseOrderDTO.getDiscount());
-        order.setTotal(PurchaseOrderDTO.getTotal());
-        return ordersDAO.save(order);
+        order.setOrderID(purchaseOrderDTO.getOrderID());
+        order.setDate(purchaseOrderDTO.getDate());
+        order.setCusTomerId(purchaseOrderDTO.getCusTomerId());
+        order.setDiscount(purchaseOrderDTO.getDiscount());
+        order.setTotal(purchaseOrderDTO.getTotal());
+        boolean orderSaved = ordersDAO.save(order);
+
+        if (!orderSaved) {
+            return false; // Return false if order insertion fails
+        }
+        if (!orderSaved) {
+            ArrayList<CartDTO> cartArray = purchaseOrderDTO.getCartArray();
+            for (CartDTO c : cartArray) {
+                ItemDTO itemDTO = c.getItem();
+                String cartItemCode = itemDTO.getCode();
+                int cartQty = c.getQty();
+
+                // save order details
+                OrdersDTO orderDetails = new OrdersDTO(purchaseOrderDTO.getOrderID(), purchaseOrderDTO.getCusTomerId(), cartItemCode);
+                boolean isOrderDetailsSaved = orderDetailsDAO.save(orderDetails);
+                System.out.println(isOrderDetailsSaved);
+
+            }
+        }
+
+        return true; // Return true if all operations are successful
     }
+
 
     @Override
     public CustomerDTO searchCustomer(String id) throws SQLException, ClassNotFoundException {

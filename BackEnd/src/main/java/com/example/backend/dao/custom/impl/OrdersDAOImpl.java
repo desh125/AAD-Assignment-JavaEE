@@ -1,10 +1,8 @@
 package com.example.backend.dao.custom.impl;
 
 import com.example.backend.dao.custom.OrdersDAO;
-import com.example.backend.entity.CustomEntity;
-import com.example.backend.entity.Customer;
-import com.example.backend.entity.Item;
-import com.example.backend.entity.PurchaseOrder;
+import com.example.backend.dto.CartDTO;
+import com.example.backend.entity.*;
 import com.example.backend.listner.MyListener;
 
 import java.sql.Connection;
@@ -66,13 +64,17 @@ public class OrdersDAOImpl implements OrdersDAO {
     @Override
     public boolean save(PurchaseOrder order) {
         try (Connection connection = MyListener.pool.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO orders (orderId, date, customerId,discount ,total) VALUES (?, ?, ?, ?,?)");
+            // Insert the order into the orders table
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO orders (orderId, date, customerId, discount, total) VALUES (?, ?, ?, ?, ?)");
             statement.setString(1, order.getOrderID());
             statement.setString(2, order.getDate());
             statement.setString(3, order.getCusTomerId());
-            statement.setDouble(4, order.getDiscount());
+            statement.setInt(4, order.getDiscount());
             statement.setDouble(5, order.getTotal());
-            return statement.executeUpdate() > 0;
+            statement.executeUpdate();
+
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

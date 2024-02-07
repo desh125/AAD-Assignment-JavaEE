@@ -1,9 +1,8 @@
 package com.example.backend.dao.custom.impl;
 
 import com.example.backend.dao.custom.OrderDetailsDAO;
-import com.example.backend.entity.Item;
+import com.example.backend.dto.OrdersDTO;
 import com.example.backend.entity.Orders;
-import com.example.backend.entity.PurchaseOrder;
 import com.example.backend.listner.MyListener;
 
 import java.sql.*;
@@ -36,14 +35,19 @@ public class OrderDetailsDAOImpl implements OrderDetailsDAO {
     }
 
     @Override
-    public boolean save(Orders dto) {
+    public boolean save(Orders dto) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    @Override
+    public boolean save(OrdersDTO dto) {
         System.out.println(dto);
 
         try (Connection connection = MyListener.pool.getConnection();) {
-            PreparedStatement pstm = connection.prepareStatement("INSERT INTO order_items (orderID, itemID, qty) VALUES (?, ?, ?)");
-           // pstm.setString(1, dto.getOrderID());
-           // pstm.setString(2, dto.getItemID());
-           // pstm.setInt(3, dto.getQty());
+            PreparedStatement pstm = connection.prepareStatement("INSERT INTO order_details (orderID, customerId, item_code) VALUES (?, ?, ?)");
+            pstm.setString(1, dto.getOrderId());
+            pstm.setString(2, dto.getCustomerId());
+            pstm.setString(3, dto.getItem_code());
 
             if (pstm.executeUpdate() <= 0) {
                 return false;

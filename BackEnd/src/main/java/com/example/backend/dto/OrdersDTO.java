@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class OrdersDTO {
     private String orderId;
-    private String date;
     private String customerId;
-    private String address;
+    private String item_code;
 }

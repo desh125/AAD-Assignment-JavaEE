@@ -13,6 +13,7 @@ public class PurchaseOrder {
     private String orderID;
     private String date;
     private ArrayList<Cart> cartArray;
+    private String item_code;
     private double total;
     private int discount;
     private String cusTomerId;

@@ -91,8 +91,9 @@ function deleteItem(code) {
     if (!consent) return;
 
     $.ajax({
+        type: 'DELETE',
         url: baseUrl + 'item?code=' + code,
-        method: 'DELETE',
+
         success: function (res) {
             alert(res.message);
             clearItemInputFields();
@@ -112,8 +113,8 @@ function updateItem(code) {
     let updatedItem = {
         "code": code,
         "name": itemName,
-        "price": parseFloat(price),
-        "qty": parseInt(quantity)
+        "price": price,
+        "qty": quantity
     };
 
     $.ajax({
