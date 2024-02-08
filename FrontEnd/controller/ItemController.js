@@ -3,7 +3,10 @@ $(document).ready(function () {
     bindRowClickEvents()
     getAllItems();
     $("#addButtonItem").click(function () {
-        saveItem();
+        if(checkAllItemValidations()){
+            saveItem();
+        }
+
     });
 
     $("#btnGetAll").click(function () {
@@ -42,7 +45,7 @@ function saveItem() {
             qty: quantity
         },
         success: function (res) {
-            alert(res.message);
+            alert("success");
             clearItemInputFields();
             getAllItems();
         },
@@ -117,7 +120,7 @@ function updateItem(code) {
         contentType: "application/json",
         data: JSON.stringify(updatedItem),
         success: function (res) {
-            alert(res.message);
+            alert("success");
             clearItemInputFields();
             getAllItems();
         },

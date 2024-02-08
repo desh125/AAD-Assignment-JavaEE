@@ -1,1 +1,1 @@
-pos project
+This is the pos project that i developed using html,css,js and javaee

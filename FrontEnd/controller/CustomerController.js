@@ -5,9 +5,10 @@ $(document).ready(function () {
     bindRowClickEvents()
     getAllCustomers();
     $("#saveButtonCustomer").click(function () {
-        console.log("add button clicked")
-        saveCustomer();
-        getAllCustomers();
+        if (checkAllValidations()) { // Check validations before saving
+            saveCustomer();
+            getAllCustomers();
+        }
     });
 
     $("#btnGetAll").click(function () {
@@ -44,7 +45,7 @@ $(document).ready(function () {
             type: "DELETE",
             url: baseUrl + 'customer?cusId=' + id,
             success: function (response) {
-                alert(response.message);
+                alert("success");
                 getAllCustomers();
             },
             error: function (xhr, status, error) {
@@ -56,42 +57,45 @@ $(document).ready(function () {
 
     // Update button event
     $("#updateButtonCustomer").click(function () {
-        let id1 = $("#cId").val();
-        let customerName = $("#cName").val();
-        let customerTP = $("#cTP").val();
-        let customerAge = parseInt($("#cAge").val());
-        let customerSalary = parseFloat($("#cSalary").val());
+        if(checkAllValidations()){
+            let id1 = $("#cId").val();
+            let customerName = $("#cName").val();
+            let customerTP = $("#cTP").val();
+            let customerAge = parseInt($("#cAge").val());
+            let customerSalary = parseFloat($("#cSalary").val());
 
-        let customer = {
-            "cusId": id1,
-            "cusName": customerName,
-            "cusTp": customerTP,
-            "cusAge": customerAge,
-            "cusSalary": customerSalary
-        }
+            let customer = {
+                "cusId": id1,
+                "cusName": customerName,
+                "cusTp": customerTP,
+                "cusAge": customerAge,
+                "cusSalary": customerSalary
+            }
 
 
-        let b = confirm("Do you want to Update " + id1 + " ?");
+            let b = confirm("Do you want to Update " + id1 + " ?");
 
-        if (b) {
-            $.ajax({
-                url: baseUrl + 'customer',
-                method: 'PUT',
-                contentType: "application/json",
-                data: JSON.stringify(customer),
-                success: function (res) {
-                    alert(res.message);
-                    getAllCustomers();
-                },
-                error: function (error) {
-                    if (error.responseJSON && error.responseJSON.message) {
-                        alert(error.responseJSON.message);
-                    } else {
-                        alert("An error occurred while processing your request.");
+            if (b) {
+                $.ajax({
+                    url: baseUrl + 'customer',
+                    method: 'PUT',
+                    contentType: "application/json",
+                    data: JSON.stringify(customer),
+                    success: function (res) {
+                        alert("success");
+                        getAllCustomers();
+                    },
+                    error: function (error) {
+                        if (error.responseJSON && error.responseJSON.message) {
+                            alert(error.responseJSON.message);
+                        } else {
+                            alert("An error occurred while processing your request.");
+                        }
                     }
-                }
-            });
+                });
+            }
         }
+
     });
 
 
@@ -118,12 +122,12 @@ $(document).ready(function () {
                 cusSalary: customerSalary
             },
             success: function (response) {
-                alert(response.message);
+                alert("success");
                 clearCustomerInputFields();
                 getAllCustomers();
             },
             error: function (xhr, status, error) {
-                alert("Error: " + xhr.responseText);
+              //  alert("Error: " + xhr.responseText);
             }
         });
     }
