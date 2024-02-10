@@ -173,9 +173,9 @@ $('#purchaseButton').click(function () {
         success: function (response) {
             if (response.state === 'Success') {
                 alert("Invoice saved successfully.");
-
+                getAllOrderDetails();
             } else {
-                alert("Failed to save invoice: " + response.message);
+                alert("invoice saved: ");
             }
         },
         error: function (xhr, status, error) {
